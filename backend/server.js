@@ -1,3 +1,4 @@
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -34,32 +35,36 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport Google Strategy
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/api/auth/google/callback"
-}, async (accessToken, refreshToken, profile, done) => {
-  try {
-    const userData = {
-      googleId: profile.id,
-      name: profile.displayName,
-      email: profile.emails[0].value,
-      profilePicture: profile.photos[0].value
-    };
-    return done(null, userData);
-  } catch (error) {
-    return done(error, null);
-  }
-}));
+// Passport Google Strategy - Only initialize if credentials exist
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/api/auth/google/callback"
+  }, async (accessToken, refreshToken, profile, done) => {
+    try {
+      const userData = {
+        googleId: profile.id,
+        name: profile.displayName,
+        email: profile.emails[0].value,
+        profilePicture: profile.photos[0].value
+      };
+      return done(null, userData);
+    } catch (error) {
+      return done(error, null);
+    }
+  }));
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
+  passport.serializeUser((user, done) => {
+    done(null, user);
+  });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+  passport.deserializeUser((user, done) => {
+    done(null, user);
+  });
+} else {
+  console.warn('Google OAuth credentials not found. Google authentication will not work.');
+}
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -73,4 +78,5 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
 });
