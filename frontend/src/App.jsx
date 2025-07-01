@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
@@ -19,10 +19,32 @@ import Messages from "./components/Messages";
 
 import './App.css';
 
+function AuthHandler() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const token = urlParams.get('token');
+    const error = urlParams.get('error');
+
+    if (token) {
+      localStorage.setItem('authToken', token);
+      navigate('/home');
+    } else if (error) {
+      console.error('Authentication error:', error);
+      navigate('/?error=' + error);
+    }
+  }, [location, navigate]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
       <div className="App">
+        <AuthHandler />
         <Routes>
           {/* Landing and Auth Routes */}
           <Route path="/" element={<LandingPage />} />
@@ -31,6 +53,15 @@ function App() {
           <Route path="/business" element={<BusinessPortal />} />
           
           {/* Main App Routes (with navbar) */}
+          <Route path="/home" element={
+            <div>
+              <MyNavbar />
+              <div className="pt-28">
+                <SearchBarSection />
+                <QueueDirectory />
+              </div>
+            </div>
+          } />
           <Route path="/dashboard" element={
             <div>
               <MyNavbar />

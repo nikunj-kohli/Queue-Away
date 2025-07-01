@@ -1,12 +1,15 @@
-
 const express = require('express');
-const { createOrder, verifyPayment, getPaymentHistory } = require('../controllers/paymentController');
-const { protect } = require('../middleware/authMiddleware');
-
 const router = express.Router();
+const { createOrder, verifyPayment, getPaymentHistory } = require('../controllers/paymentController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/order', protect, createOrder);
-router.post('/verify', protect, verifyPayment);
-router.get('/history', protect, getPaymentHistory);
+// Create Razorpay order
+router.post('/order', authMiddleware, createOrder);
+
+// Verify Razorpay payment
+router.post('/verify', authMiddleware, verifyPayment);
+
+// Get payment history
+router.get('/history', authMiddleware, getPaymentHistory);
 
 module.exports = router;
