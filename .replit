@@ -14,3 +14,19 @@ externalPort = 80
 [[ports]]
 localPort = 5173
 externalPort = 5173
+
+[workflows]
+runButton = "Run Full Stack"
+
+[[workflows.workflow]]
+name = "Run Full Stack"
+author = 39244321
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npm start"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm run dev"

@@ -1,0 +1,21 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "Queue Away 🚶‍♂️💈 Overview Queue Away is a MERN stack project designed to streamline appointment bookings for salons, spas, tattoo parlours, and similar businesses. It enables users to book slots, view live queue updates, and manage appointments — saving time and reducing wait-related frustration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.14.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "razorpay": "^2.9.6",
+    "sequelize": "^6.37.7"
+  }
+}
