@@ -1,0 +1,67 @@
+You are now my backend + frontend architect.
+
+My current frontend is already designed, and I want to keep the UI same but polish everything to look like a clean iOS-style app.
+
+I have a MongoDB URI set:
+MONGO_URI=mongodb+srv://nikunj:12345@queueaway.3yqo9i2.mongodb.net/queueaway
+
+---
+
+🔧 Do the following:
+
+1. **SQL Integration**
+   - Add PostgreSQL or MySQL support alongside MongoDB.
+   - Use SQL to store: payment records, usage logs, and user metadata.
+   - Keep user core/auth/session details in MongoDB.
+
+2. **Google Auth**
+   - Add proper Google OAuth2 login and signup.
+   - Store user profile in MongoDB.
+   - If user exists, log them in, else create a new one.
+
+3. **Razorpay**
+   - Integrate Razorpay payment gateway.
+   - Create `/api/payment/order` to create order.
+   - Create `/api/payment/verify` to verify signature.
+   - Store payment info in SQL (amount, time, transaction ID, success/fail, linked Mongo user ID).
+
+4. **Database Setup**
+   - MongoDB:
+     - `users` collection (Google auth users)
+     - `messages` collection (from messaging system)
+     - `sessions` collection (if needed)
+   - SQL:
+     - `payments`
+     - `logs`
+     - `feedback`
+
+5. **Messaging Feature**
+   - Add messaging support (like chat).
+   - Create routes `/api/messages/send`, `/api/messages/get`
+   - Store messages in `messages` collection with sender, receiver, content, timestamp.
+
+6. **Missing Pages or Features**
+   - Identify any UI pages that are incomplete or missing:
+     - Profile page
+     - Settings
+     - Payment history
+     - Success/fail screens
+   - Build them and hook to backend routes.
+
+7. **Frontend-Backend Sync**
+   - Connect all frontend forms and buttons to backend APIs.
+   - Show Razorpay popup properly.
+   - Fix any broken UI state, inputs, or buttons.
+   - Fix all error handling and loading states.
+
+8. **iOS-like UI Polish**
+   - Keep design layout same but polish it like iOS.
+   - Use smooth gradients, rounded corners, neumorphism if possible.
+   - All new pages should follow this theme too.
+
+---
+
+🎯 Goal:
+- Everything fully connected
+- All pages functional and responsive
+- Auth, payments, database, messages — all working cleanly
