@@ -1,10 +1,12 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from './ui/button';
+import { useAuth } from '../contexts/AuthContext';
 
-function SignIn() {
+const SignIn = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -17,12 +19,15 @@ function SignIn() {
     setError('');
     setLoading(true);
     
-    // TODO: Implement actual signin API call
-    console.log('Sign in:', formData);
-    setTimeout(() => {
-      setLoading(false);
-      navigate('/home');
-    }, 1000);
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      navigate('/dashboard');
+    } else {
+      setError(result.message || 'Login failed');
+    }
+    
+    setLoading(false);
   };
 
   const handleGoogleSignIn = () => {
@@ -30,65 +35,68 @@ function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center px-4">
-      {/* Back to Home */}
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <button 
         onClick={() => navigate('/')}
-        className="absolute top-6 left-6 flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+        className="absolute top-6 left-6 flex items-center text-muted-foreground hover:text-primary transition-colors"
       >
         <span className="mr-2">←</span>
         Back to Home
       </button>
 
-      <div className="w-full max-w-md">
-        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 p-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md"
+      >
+        <div className="bg-card/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50 p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-primary to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl text-white">🔑</span>
             </div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold text-foreground">
               Welcome Back
             </h2>
-            <p className="text-gray-600 mt-2">Sign in to continue saving time</p>
+            <p className="text-muted-foreground mt-2">Sign in to continue saving time</p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl mb-6">
+            <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-2xl mb-6">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+              <label className="block text-sm font-semibold text-foreground mb-2">Email Address</label>
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="w-full px-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80"
+                className="w-full px-4 py-4 border border-border rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-all bg-background text-foreground"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+              <label className="block text-sm font-semibold text-foreground mb-2">Password</label>
               <input
                 type="password"
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
-                className="w-full px-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80"
+                className="w-full px-4 py-4 border border-border rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-all bg-background text-foreground"
               />
             </div>
 
             <div className="flex items-center justify-between">
               <label className="flex items-center">
-                <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                <span className="ml-2 text-sm text-gray-600">Keep me signed in</span>
+                <input type="checkbox" className="rounded border-border text-primary focus:ring-primary" />
+                <span className="ml-2 text-sm text-muted-foreground">Keep me signed in</span>
               </label>
-              <button type="button" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+              <button type="button" className="text-sm text-primary hover:text-primary/80 font-medium">
                 Forgot password?
               </button>
             </div>
@@ -96,7 +104,7 @@ function SignIn() {
             <Button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:transform-none"
+              className="w-full py-4 text-lg btn-hover"
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </Button>
@@ -105,17 +113,17 @@ function SignIn() {
           <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
+                <div className="w-full border-t border-border"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+                <span className="px-4 bg-card text-muted-foreground font-medium">Or continue with</span>
               </div>
             </div>
 
             <Button
               type="button"
               variant="outline"
-              className="w-full mt-6 py-4 rounded-2xl border-2 font-semibold hover:bg-gray-50 transform hover:scale-105 transition-all"
+              className="w-full mt-6 py-4 btn-hover"
               onClick={handleGoogleSignIn}
             >
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
@@ -128,20 +136,20 @@ function SignIn() {
             </Button>
           </div>
 
-          <p className="text-center text-sm text-gray-600 mt-8">
+          <p className="text-center text-sm text-muted-foreground mt-8">
             Don't have an account?{' '}
             <button
               type="button"
-              className="text-blue-600 hover:text-blue-700 font-semibold"
+              className="text-primary hover:text-primary/80 font-semibold"
               onClick={() => navigate('/signup')}
             >
               Create account
             </button>
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
-}
+};
 
 export default SignIn;

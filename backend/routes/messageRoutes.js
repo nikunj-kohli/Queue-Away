@@ -1,4 +1,3 @@
-
 const express = require('express');
 const { 
   sendMessage, 
@@ -6,13 +5,13 @@ const {
   getConversations, 
   markAsRead 
 } = require('../controllers/messageController');
-const { protect } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/send', protect, sendMessage);
-router.get('/conversations', protect, getConversations);
-router.get('/:otherUserId', protect, getMessages);
-router.patch('/read', protect, markAsRead);
+router.post('/send', authMiddleware, sendMessage);
+router.get('/conversations', authMiddleware, getConversations);
+router.get('/:otherUserId', authMiddleware, getMessages);
+router.patch('/read', authMiddleware, markAsRead);
 
 module.exports = router;
