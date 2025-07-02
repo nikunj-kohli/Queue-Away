@@ -1,274 +1,246 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Search, MapPin, Clock, Users, Star, ArrowRight, Smartphone, Shield, Zap } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { useTheme } from './ThemeProvider';
 
-function LandingPage() {
+const LandingPage = () => {
   const navigate = useNavigate();
-  const [nearbyShops, setNearbyShops] = useState([]);
-  const [userLocation, setUserLocation] = useState(null);
+  const { theme, toggleTheme } = useTheme();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [location, setLocation] = useState('');
 
-  useEffect(() => {
-    // Get user location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-          // Fetch nearby shops based on location
-          fetchNearbyShops(position.coords.latitude, position.coords.longitude);
-        },
-        (error) => {
-          console.log('Location access denied');
-          // Load default shops
-          fetchNearbyShops(28.6139, 77.2090); // Default to Delhi
-        }
-      );
-    }
-  }, []);
-
-  const fetchNearbyShops = async (lat, lng) => {
-    try {
-      const response = await fetch(`/api/shops/nearby?lat=${lat}&lng=${lng}`);
-      const data = await response.json();
-      setNearbyShops(data.slice(0, 6)); // Show only 6 shops
-    } catch (error) {
-      // Mock data for demonstration
-      setNearbyShops([
-        { _id: '1', name: 'City Hospital', category: 'Healthcare', waitTime: '15 min', rating: 4.5 },
-        { _id: '2', name: 'Tech Solutions', category: 'Services', waitTime: '8 min', rating: 4.2 },
-        { _id: '3', name: 'Food Corner', category: 'Restaurant', waitTime: '22 min', rating: 4.7 },
-        { _id: '4', name: 'Bank Branch', category: 'Banking', waitTime: '12 min', rating: 4.1 },
-        { _id: '5', name: 'Salon & Spa', category: 'Beauty', waitTime: '30 min', rating: 4.6 },
-        { _id: '6', name: 'Auto Service', category: 'Automotive', waitTime: '45 min', rating: 4.3 }
-      ]);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/directory?q=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(location)}`);
     }
   };
 
+  const features = [
+    {
+      icon: <Smartphone className="w-8 h-8" />,
+      title: "Smart Queue Management",
+      description: "Join queues remotely and track your position in real-time"
+    },
+    {
+      icon: <Clock className="w-8 h-8" />,
+      title: "Save Time",
+      description: "No more waiting in physical lines. Get notified when it's your turn"
+    },
+    {
+      icon: <Shield className="w-8 h-8" />,
+      title: "Secure & Reliable",
+      description: "Your data is protected with enterprise-grade security"
+    }
+  ];
+
+  const stats = [
+    { number: "10K+", label: "Active Users" },
+    { number: "500+", label: "Partner Businesses" },
+    { number: "2.5hrs", label: "Average Time Saved" },
+    { number: "98%", label: "Customer Satisfaction" }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+      <motion.nav 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="relative z-10 bg-card/80 backdrop-blur-xl border-b border-border/50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <img src="/src/assets/projectlogo.png" alt="QueueAway" className="h-8 w-8 mr-3" />
-              <span className="text-xl font-bold text-gray-900">QueueAway</span>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-primary to-purple-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-lg">Q</span>
+              </div>
+              <span className="text-xl font-bold text-foreground">QueueAway</span>
             </div>
+            
             <div className="flex items-center space-x-4">
+              <Button
+                variant="ghost"
+                onClick={toggleTheme}
+                className="w-10 h-10 rounded-full"
+              >
+                {theme === 'light' ? '🌙' : '☀️'}
+              </Button>
               <Button variant="ghost" onClick={() => navigate('/signin')}>
                 Sign In
               </Button>
-              <Button onClick={() => navigate('/signup')}>
+              <Button onClick={() => navigate('/signup')} className="btn-hover">
                 Get Started
-              </Button>
-              <Button variant="outline" onClick={() => navigate('/business-portal')}>
-                For Business
               </Button>
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+      <section className="relative z-10 pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
               Skip the Wait,<br />
-              <span className="text-blue-600">Live Your Life</span>
+              <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Live Your Life
+              </span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              QueueAway revolutionizes how you interact with businesses. Join virtual queues, 
-              track wait times in real-time, and never waste time standing in line again.
+            <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
+              Join virtual queues at your favorite businesses. Track wait times in real-time 
+              and never waste time standing in line again.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+            {/* Search Bar */}
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              onSubmit={handleSearch}
+              className="max-w-2xl mx-auto mb-12"
+            >
+              <div className="flex flex-col md:flex-row gap-4 p-2 bg-card/80 backdrop-blur-xl rounded-2xl border border-border/50">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for salons, clinics, restaurants..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-transparent border-0 focus:outline-none text-foreground placeholder-muted-foreground"
+                  />
+                </div>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="w-full md:w-48 pl-10 pr-4 py-3 bg-transparent border-0 focus:outline-none text-foreground placeholder-muted-foreground"
+                  />
+                </div>
+                <Button type="submit" className="px-8 py-3 btn-hover">
+                  Search
+                </Button>
+              </div>
+            </motion.form>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
               <Button 
                 size="lg" 
-                className="px-8 py-4 text-lg bg-blue-600 hover:bg-blue-700"
+                className="px-8 py-4 text-lg btn-hover"
                 onClick={() => navigate('/signup')}
               >
                 Start Queuing Smart
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="px-8 py-4 text-lg"
-                onClick={() => navigate('/business-portal')}
+                className="px-8 py-4 text-lg btn-hover"
+                onClick={() => navigate('/directory')}
               >
-                Join as Business
+                Browse Businesses
               </Button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">How QueueAway Works</h2>
-            <p className="text-xl text-gray-600">Simple, efficient, and time-saving</p>
-          </div>
+      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-foreground mb-4">How QueueAway Works</h2>
+            <p className="text-xl text-muted-foreground">Simple, efficient, and time-saving</p>
+          </motion.div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">📍</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Find & Join</h3>
-              <p className="text-gray-600">
-                Discover businesses near you and join their virtual queues instantly. 
-                No more physical waiting in crowded spaces.
-              </p>
-            </Card>
-
-            <Card className="p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">⏱️</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Track Real-time</h3>
-              <p className="text-gray-600">
-                Get live updates on your queue position and estimated wait time. 
-                Plan your schedule accordingly.
-              </p>
-            </Card>
-
-            <Card className="p-8 text-center hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🎯</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Arrive on Time</h3>
-              <p className="text-gray-600">
-                Receive notifications when it's almost your turn. 
-                Arrive just in time and get served immediately.
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Nearby Shops Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Popular Near You</h2>
-            <p className="text-xl text-gray-600">Join queues at these trending businesses</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {nearbyShops.map((shop) => (
-              <Card key={shop._id} className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-semibold text-lg">{shop.name}</h3>
-                    <p className="text-gray-600">{shop.category}</p>
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Card className="p-8 text-center card-hover bg-card/50 backdrop-blur-xl border-border/50">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
+                    {feature.icon}
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-medium text-green-600">
-                      ⭐ {shop.rating}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Wait time</span>
-                  <span className="font-medium text-blue-600">{shop.waitTime}</span>
-                </div>
-                <Button 
-                  className="w-full mt-4" 
-                  variant="outline"
-                  onClick={() => navigate('/signup')}
-                >
-                  Join Queue
-                </Button>
-              </Card>
+                  <h3 className="text-xl font-semibold mb-4 text-foreground">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </Card>
+              </motion.div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-12">
+      {/* Stats Section */}
+      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8 bg-primary/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 text-center">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className="text-4xl font-bold text-primary mb-2">{stat.number}</div>
+                <div className="text-muted-foreground">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-4xl font-bold text-foreground mb-6">
+              Ready to Skip the Wait?
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Join thousands of users who are already saving time with QueueAway
+            </p>
             <Button 
-              variant="outline" 
-              size="lg"
+              size="lg" 
+              className="px-8 py-4 text-lg btn-hover"
               onClick={() => navigate('/signup')}
             >
-              View All Businesses
+              Get Started Free
+              <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-          </div>
+          </motion.div>
         </div>
       </section>
-
-      {/* Statistics */}
-      <section className="py-20 bg-blue-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold mb-2">10K+</div>
-              <div className="text-blue-200">Active Users</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">500+</div>
-              <div className="text-blue-200">Partner Businesses</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">2.5hrs</div>
-              <div className="text-blue-200">Average Time Saved</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">98%</div>
-              <div className="text-blue-200">Customer Satisfaction</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center mb-4">
-                <img src="/src/assets/projectlogo.png" alt="QueueAway" className="h-8 w-8 mr-3" />
-                <span className="text-xl font-bold">QueueAway</span>
-              </div>
-              <p className="text-gray-400">
-                Making waiting a thing of the past. Join the future of queue management.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Features</a></li>
-                <li><a href="#" className="hover:text-white">Pricing</a></li>
-                <li><a href="#" className="hover:text-white">For Business</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Help Center</a></li>
-                <li><a href="#" className="hover:text-white">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white">Status</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">About</a></li>
-                <li><a href="#" className="hover:text-white">Careers</a></li>
-                <li><a href="#" className="hover:text-white">Privacy</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 QueueAway. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
-}
+};
 
 export default LandingPage;
