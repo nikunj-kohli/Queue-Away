@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { api } from '../lib/api';
 
 const AuthContext = createContext();
 
@@ -26,18 +27,8 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      const response = await fetch('/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        localStorage.removeItem('token');
-      }
+      const userData = await api.getCurrentUser();
+      setUser(userData);
     } catch (error) {
       console.error('Auth check failed:', error);
       localStorage.removeItem('token');
@@ -48,49 +39,23 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        setUser(data.user);
-        return { success: true };
-      } else {
-        return { success: false, message: data.message };
-      }
+      const data = await api.login(email, password);
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return { success: true };
     } catch (error) {
-      return { success: false, message: 'Network error' };
+      return { success: false, message: error.message };
     }
   };
 
   const signup = async (name, email, password) => {
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        setUser(data.user);
-        return { success: true };
-      } else {
-        return { success: false, message: data.message };
-      }
+      const data = await api.signup(name, email, password);
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return { success: true };
     } catch (error) {
-      return { success: false, message: 'Network error' };
+      return { success: false, message: error.message };
     }
   };
 

@@ -5,6 +5,7 @@ import { Clock, MapPin, Users, Plus, Search } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { useAuth } from '../contexts/AuthContext';
+import { api } from '../lib/api';
 import Navigation from './Navigation';
 
 const Dashboard = () => {
@@ -24,24 +25,13 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
       // Fetch user's queues
-      const queuesResponse = await fetch('/api/queues/my-queues', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if (queuesResponse.ok) {
-        const queuesData = await queuesResponse.json();
-        setMyQueues(queuesData);
-      }
+      const queuesData = await api.getMyQueues();
+      setMyQueues(queuesData);
 
       // Fetch nearby businesses
-      const businessResponse = await fetch('/api/business');
-      if (businessResponse.ok) {
-        const businessData = await businessResponse.json();
-        setNearbyBusinesses(businessData.slice(0, 6));
-      }
+      const businessData = await api.getBusinesses();
+      setNearbyBusinesses(businessData.slice(0, 6));
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {

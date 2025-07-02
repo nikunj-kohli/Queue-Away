@@ -25,7 +25,18 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const app = express();
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      scriptSrc: ["'self'"],
+    },
+  },
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -34,9 +45,9 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration - Allow all origins in development
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: true, // Allow all origins in development
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -52,7 +63,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // Set to false for development
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -64,10 +75,14 @@ app.use(passport.session());
 // Database connections
 connectDB();
 
-// Sync MySQL tables
-sequelize.sync({ alter: true })
-  .then(() => console.log('MySQL tables synced'))
-  .catch(err => console.error('MySQL sync error:', err));
+// Sync MySQL tables (only if MySQL is configured)
+if (process.env.MYSQL_HOST && process.env.MYSQL_HOST !== 'localhost') {
+  sequelize.sync({ alter: true })
+    .then(() => console.log('✅ MySQL tables synced'))
+    .catch(err => console.error('❌ MySQL sync error:', err));
+} else {
+  console.log('⚠️  MySQL not configured, skipping...');
+}
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -102,8 +117,9 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+  console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
 });
