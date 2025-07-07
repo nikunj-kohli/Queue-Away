@@ -1,43 +1,32 @@
 import { Link } from 'react-router-dom';
-import { auth } from '../../firebase';
+import { useAuth } from '../../contexts/AuthContext';
 import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
+import './Navbar.css';
 
 export default function Navbar() {
-  const user = auth.currentUser;
+  const { currentUser } = useAuth();
 
   return (
-    <nav style={{
-      display: 'flex',
-      gap: '1rem',
-      padding: '1rem',
-      background: '#f8f9fa',
-      borderBottom: '1px solid #dee2e6'
-    }}>
-      <Link to="/" style={{ textDecoration: 'none', color: '#212529' }}>Home</Link>
-      <Link to="/queue-directory" style={{ textDecoration: 'none', color: '#212529' }}>Shops</Link>
+    <nav className="navbar">
+      <div className="navbar-brand">
+        <Link to="/">QueueAway</Link>
+      </div>
       
-      {!user ? (
-        <>
-          <Link to="/login" style={{ textDecoration: 'none', color: '#212529' }}>Login</Link>
-          <Link to="/customer-signup" style={{ textDecoration: 'none', color: '#212529' }}>Sign Up</Link>
-        </>
-      ) : (
-        <>
-          <Link to="/chat" style={{ textDecoration: 'none', color: '#212529' }}>Chat</Link>
-          <Link to="/profile" style={{ textDecoration: 'none', color: '#212529' }}>Profile</Link>
-          <button 
-            onClick={() => signOut(auth)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#dc3545',
-              cursor: 'pointer'
-            }}
-          >
-            Logout
-          </button>
-        </>
-      )}
+      <div className="navbar-links">
+        <Link to="/shops">Shops</Link> {/* Updated link */}
+        {currentUser ? (
+          <>
+            <Link to="/myqueues">My Queues</Link>
+            <button onClick={() => signOut(auth)}>Logout</button>
+          </>
+        ) : (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/customer-signup">Sign Up</Link>
+          </>
+        )}
+      </div>
     </nav>
   );
 }

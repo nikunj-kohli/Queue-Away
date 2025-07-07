@@ -1,0 +1,54 @@
+.shop-details {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .shop-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .shop-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #1a202c;
+  }
+  
+  .shop-header .location {
+    font-size: 1.2rem;
+    color: #4a5568;
+  }
+  
+  .shop-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+  
+  .shop-image img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .booking-form {
+    background: #f7fafc;
+    padding: 2rem;
+    border-radius: 8px;
+  }
+  
+  .error {
+    color: #e53e3e;
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #4a5568;
+  }

@@ -4,58 +4,58 @@ import MainLayout from './layouts/MainLayout';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import BusinessPrivateRoute from './components/Auth/BusinessPrivateRoute';
 
+// Core Pages
+import Home from './components/SearchBarSection';
+import QueueDirectory from './components/QueueDirectory/QueueDirectory'; // Updated path
+import ShopDetails from './components/ShopDetails/ShopDetails'; // Updated path
+import MyQueues from './components/MyQueues';
+import About from './components/About';
+import Help from './components/Help';
+
 // Auth Components
 import Login from './components/Auth/Login';
 import CustomerSignup from './components/Auth/CustomerSignup';
 import BusinessSignup from './components/Auth/BusinessSignup';
 
-// Core Pages
-import Home from './components/Home';
-import QueueDirectory from './components/QueueDirectory';
-import ShopDetails from './components/ShopDetails';
-import MyQueues from './components/MyQueues';
-import About from './components/About';
-import Help from './components/Help';
-
-// Dashboard Pages
+// Dashboard Components
 import CustomerDashboard from './components/Dashboard/CustomerDashboard';
 import BusinessDashboard from './components/Dashboard/BusinessDashboard';
 
-// User Pages
+// User Components
 import Profile from './components/Profile';
 import Settings from './components/Settings';
 import ChatUI from './components/Chat/ChatUI';
 
-// Error Pages
-import NotFound from './components/Errors/NotFound';
-import Unauthorized from './components/Errors/Unauthorized';
+// New Components
+import LegacyShopRedirect from './components/ShopDetails/LegacyShopRedirect';
 
 export default function App() {
   return (
     <Router>
       <AuthProvider>
         <Routes>
-          {/* Public Routes with MainLayout */}
+          {/* Public Routes */}
           <Route path="/" element={<MainLayout><Home /></MainLayout>} />
-          <Route path="/queue-directory" element={<MainLayout><QueueDirectory /></MainLayout>} />
-          <Route path="/queue-directory/:shopId" element={<MainLayout><ShopDetails /></MainLayout>} />
+          <Route path="/shops" element={<MainLayout><QueueDirectory /></MainLayout>} />
+          <Route path="/shops/:shopSlug/book" element={<MainLayout><ShopDetails /></MainLayout>} />
+          <Route path="/queue-directory/:shopId/book" element={<LegacyShopRedirect />} />
           <Route path="/about" element={<MainLayout><About /></MainLayout>} />
           <Route path="/help" element={<MainLayout><Help /></MainLayout>} />
           
-          {/* Auth Routes */}
+          {/* Authentication Routes */}
           <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
           <Route path="/customer-signup" element={<MainLayout><CustomerSignup /></MainLayout>} />
           <Route path="/business-signup" element={<MainLayout><BusinessSignup /></MainLayout>} />
 
           {/* Protected Customer Routes */}
-          <Route path="/customer-dashboard" element={
-            <PrivateRoute>
-              <MainLayout><CustomerDashboard /></MainLayout>
-            </PrivateRoute>
-          } />
           <Route path="/myqueues" element={
             <PrivateRoute>
               <MainLayout><MyQueues /></MainLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/customer-dashboard" element={
+            <PrivateRoute>
+              <MainLayout><CustomerDashboard /></MainLayout>
             </PrivateRoute>
           } />
 
@@ -82,10 +82,6 @@ export default function App() {
               <MainLayout><Settings /></MainLayout>
             </PrivateRoute>
           } />
-
-          {/* Error Handling */}
-          <Route path="/unauthorized" element={<MainLayout><Unauthorized /></MainLayout>} />
-          <Route path="*" element={<MainLayout><NotFound /></MainLayout>} />
         </Routes>
       </AuthProvider>
     </Router>

@@ -3,7 +3,9 @@ import { useAuth } from '../../contexts/AuthContext';
 
 export default function BusinessPrivateRoute({ children }) {
   const { currentUser } = useAuth();
-  // Add your business user check logic here
+  
+  // Check if user is business (you can modify this logic)
   const isBusinessUser = currentUser?.email?.endsWith('@business.com');
+  
   return isBusinessUser ? children : <Navigate to="/unauthorized" replace />;
 }

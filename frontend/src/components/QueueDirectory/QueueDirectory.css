@@ -1,0 +1,61 @@
+.queue-directory {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .shops-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .shop-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .shop-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shop-card h2 {
+    margin-top: 0;
+    color: #1a202c;
+  }
+  
+  .shop-card .location {
+    color: #4a5568;
+    font-weight: 500;
+  }
+  
+  .shop-card .description {
+    color: #718096;
+    margin: 1rem 0;
+  }
+  
+  .book-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #4299e1;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .book-button:hover {
+    background-color: #3182ce;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #4a5568;
+  }

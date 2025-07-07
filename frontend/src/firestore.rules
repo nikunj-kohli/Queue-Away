@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /shops/{shopId} {
+      allow read: if true;
+      allow create: if request.auth != null && 
+                   request.resource.data.name != null &&
+                   request.resource.data.location != null;
+      allow update: if request.auth != null &&
+                   request.resource.data.name != null &&
+                   request.resource.data.location != null &&
+                   request.resource.data.slug != null &&
+                   request.resource.data.originalId == resource.data.originalId;
+    }
+  }
+}

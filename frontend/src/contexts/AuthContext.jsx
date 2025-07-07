@@ -13,15 +13,16 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
       setLoading(false);
     });
+
     return unsubscribe;
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <AuthContext.Provider value={{ currentUser }}>
+    <AuthContext.Provider value={{ 
+      currentUser, 
+      loading,
+      setLoading
+    }}>
       {children}
     </AuthContext.Provider>
   );

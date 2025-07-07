@@ -1,0 +1,128 @@
+/* Base Auth Styles */
+.auth-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+  }
+  
+  .error-message {
+    color: #dc3545;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: #f8d7da;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .auth-input, .auth-select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  
+  .auth-input:focus, .auth-select:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+  
+  .auth-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+  }
+  
+  .auth-button:hover:not(:disabled) {
+    background-color: #1d4ed8;
+  }
+  
+  .auth-button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+  }
+  
+  /* Google Sign-In Button */
+  .google-signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: white;
+    color: #757575;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s;
+  }
+  
+  .google-signin-button:hover:not(:disabled) {
+    background-color: #f5f5f5;
+  }
+  
+  .google-signin-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .google-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  /* Divider */
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: #777;
+  }
+  
+  .auth-divider::before,
+  .auth-divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .auth-divider::before {
+    margin-right: 1rem;
+  }
+  
+  .auth-divider::after {
+    margin-left: 1rem;
+  }
+  
+  /* Links */
+  .auth-links {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .auth-links a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  
+  .auth-links a:hover {
+    text-decoration: underline;
+  }
+  
+  .auth-links p {
+    margin: 0.5rem 0;
+  }
