@@ -28,7 +28,7 @@ QueueAway is a queue and appointment management platform built with React, TypeS
 
 ## Demo
 You can run the current demo at the deployed link provided.
-
+https://queue-away-xuozea.web.app/
 ---
 
 **Note:** The business model feature is under development and will require coordinated updates to both backend and frontend. The current demo will continue to work until these changes are merged.
